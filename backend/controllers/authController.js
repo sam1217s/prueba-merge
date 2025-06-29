@@ -2,11 +2,7 @@ const User = require('../models/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-
-// ✅ IMPLEMENTADO - Responsabilidad del Desarrollador 2
+// ✅ IMPLEMENTADO - Registro de usuarios
 exports.register = async (req, res) => {
   try {
     const { username, password, email } = req.body;
@@ -30,11 +26,8 @@ exports.register = async (req, res) => {
 
     const hasLetter = /[a-zA-Z]/.test(password);
     const hasNumber = /[0-9]/.test(password);
-
     if (!hasLetter || !hasNumber) {
-      return res.status(400).json({ 
-        msg: 'Password must contain at least one letter and one number' 
-      });
+      return res.status(400).json({ msg: 'Password must contain at least one letter and one number' });
     }
 
     if (email) {
@@ -44,7 +37,7 @@ exports.register = async (req, res) => {
       }
     }
 
-    const existingUser = await User.findOne({ 
+    const existingUser = await User.findOne({
       $or: [
         { username: username.toLowerCase() },
         ...(email ? [{ email: email.toLowerCase() }] : [])
@@ -60,8 +53,7 @@ exports.register = async (req, res) => {
       }
     }
 
-    const saltRounds = 12;
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
     const newUser = new User({
       username: username.toLowerCase(),
@@ -73,10 +65,10 @@ exports.register = async (req, res) => {
 
     await newUser.save();
 
-    res.status(201).json({ 
+    res.status(201).json({
       msg: 'User registered successfully',
-      user: { 
-        id: newUser._id, 
+      user: {
+        id: newUser._id,
         username: newUser.username,
         email: newUser.email,
         createdAt: newUser.createdAt
@@ -84,31 +76,56 @@ exports.register = async (req, res) => {
     });
   } catch (err) {
     console.error('Registration error:', err);
-
     if (err.code === 11000) {
       const field = Object.keys(err.keyPattern)[0];
-      return res.status(400).json({ 
-        msg: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists` 
+      return res.status(400).json({
+        msg: `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`
       });
     }
-
     res.status(500).json({ error: 'Internal server error during registration' });
   }
 };
 
-// ❌ NO TOCAR - Responsabilidad del Desarrollador 1
+// ✅ IMPLEMENTADO - Login de usuarios
 exports.login = async (req, res) => {
   try {
-    res.status(501).json({ 
-      msg: 'Login function not implemented yet',
-      developer: 'Desarrollador 1 debe implementar esta función' 
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return res.status(400).json({ msg: 'Username and password are required' });
+    }
+
+    const user = await User.findByUsernameOrEmail(username);
+    if (!user) {
+      return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ msg: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign(
+      { id: user._id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    user.lastLogin = new Date();
+    await user.save();
+
+    res.json({
+      msg: 'Login successful',
+      token,
+      user: user.getPublicProfile()
     });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Internal server error during login' });
   }
 };
 
-// ✅ IMPLEMENTADO - Responsabilidad del Desarrollador 3
+// ✅ IMPLEMENTADO - Datos del dashboard
 exports.getDashboardData = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -186,4 +203,3 @@ exports.getDashboardData = async (req, res) => {
     res.status(500).json({ error: 'Error loading dashboard data' });
   }
 };
-

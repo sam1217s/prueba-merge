@@ -3,22 +3,61 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
+  <title>Iniciar Sesión - Sistema de Autenticación</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <form id="loginForm" class="login-box">
       <div class="icon">🔐</div>
-      <h2>Bienvenido</h2>
-      <input type="text" placeholder="Usuario" id="usuario" name="username" required />
-      <input type="password" placeholder="Contraseña" id="contrasena" name="password" required />
-      <button type="submit">Iniciar sesión</button>
-      <h5 class="cuenta"><a href="register.html">¿No tienes una cuenta? Haz clic aquí</a></h5>
+      <h2>Bienvenido de Vuelta</h2>
+      <p class="subtitle">Inicia sesión para continuar</p>
+
+      <div class="input-group">
+        <input 
+          type="text" 
+          placeholder="Nombre de usuario" 
+          id="usuario" 
+          name="username" 
+          required 
+          autocomplete="username"
+          minlength="3"
+        />
+      </div>
+
+      <div class="input-group">
+        <input 
+          type="password" 
+          placeholder="Contraseña" 
+          id="contrasena" 
+          name="password" 
+          required 
+          autocomplete="current-password"
+        />
+      </div>
+
+      <div class="checkbox-group">
+        <label>
+          <input type="checkbox" id="rememberMe"> 
+          Recordar sesión
+        </label>
+      </div>
+
+      <button type="submit" id="loginButton" class="login-btn">
+        Iniciar Sesión
+      </button>
+
+      <div class="links">
+        <a href="register.html" class="register-link">
+          ¿No tienes cuenta? Regístrate aquí
+        </a>
+        <a href="#" class="forgot-link">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </div>
     </form>
   </div>
-  
+
   <script src="script.js"></script>
 </body>
 </html>
-

@@ -76,7 +76,7 @@ userSchema.methods.getPublicProfile = function() {
   };
 };
 
-// Método estático
+// Método estático para login por username o email
 userSchema.statics.findByUsernameOrEmail = function(identifier) {
   return this.findOne({
     $or: [

@@ -1,10 +1,19 @@
 const API_URL = 'http://localhost:4000/api';
+const AUTH_URL = `${API_URL}/auth`;
 
+// Detectar página actual
 const isDashboardPage = document.body.classList.contains('dashboard-page');
 const isRegisterPage = document.body.classList.contains('register-page');
 const isLoginPage = document.body.classList.contains('login-page');
 
-/* ========= FUNCIONES DE AUTENTICACIÓN ========= */
+/* ========= FUNCIONES COMUNES ========= */
+function showAlert(message, isSuccess = false, redirectUrl = null) {
+  alert(message);
+  if (isSuccess && redirectUrl) {
+    setTimeout(() => window.location.href = redirectUrl, 1500);
+  }
+}
+
 function checkAuthentication() {
   const token = localStorage.getItem('token');
   if (!token) {
@@ -15,7 +24,107 @@ function checkAuthentication() {
   return token;
 }
 
-/* ========= FUNCIONES DEL DASHBOARD ========= */
+/* ========= LOGIN ========= */
+if (isLoginPage) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('loginForm');
+    if (!loginForm) return;
+
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = loginForm.username.value.trim();
+      const password = loginForm.password.value.trim();
+
+      if (!username || username.length < 3) {
+        return showAlert('El nombre de usuario debe tener al menos 3 caracteres');
+      }
+
+      if (!password) return showAlert('La contraseña es requerida');
+
+      try {
+        const loginButton = document.getElementById('loginButton');
+        loginButton.disabled = true;
+        loginButton.textContent = 'Iniciando sesión...';
+
+        const res = await fetch(`${AUTH_URL}/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+          localStorage.setItem('token', data.token);
+          showAlert(`¡Bienvenido ${data.user.username}!`, true, 'dashboard.html');
+        } else {
+          showAlert(data.msg || 'Credenciales inválidas');
+        }
+      } catch (err) {
+        console.error(err);
+        showAlert('No se pudo conectar con el servidor');
+      } finally {
+        const loginButton = document.getElementById('loginButton');
+        loginButton.disabled = false;
+        loginButton.textContent = 'Iniciar Sesión';
+      }
+    });
+
+    // Efecto visual en inputs
+    const inputs = loginForm.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        input.style.borderColor = '#6D3C52';
+        input.style.transform = 'translateY(-2px)';
+      });
+      input.addEventListener('blur', () => {
+        input.style.borderColor = '#ddd';
+        input.style.transform = 'translateY(0)';
+      });
+    });
+  });
+}
+
+/* ========= REGISTRO ========= */
+if (isRegisterPage) {
+  document.addEventListener('DOMContentLoaded', () => {
+    const registerForm = document.getElementById('registerForm');
+    if (!registerForm) return;
+
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const username = document.getElementById('usuario').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('contrasena').value;
+      const confirm = document.getElementById('confirmarContrasena').value;
+      const accepted = document.getElementById('termsAccepted').checked;
+
+      if (!accepted) return showAlert('Debes aceptar los términos');
+      if (password !== confirm) return showAlert('Las contraseñas no coinciden');
+
+      try {
+        const res = await fetch(`${AUTH_URL}/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, email, password })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          showAlert('Usuario registrado correctamente', true, 'index.html');
+        } else {
+          showAlert(data.msg || 'Error en el registro');
+        }
+      } catch (err) {
+        console.error(err);
+        showAlert('Error de red');
+      }
+    });
+  });
+}
+
+/* ========= DASHBOARD ========= */
 if (isDashboardPage) {
   document.addEventListener('DOMContentLoaded', () => {
     if (!checkAuthentication()) return;
@@ -25,6 +134,7 @@ if (isDashboardPage) {
       console.log('API no disponible, cargando datos de prueba...');
       loadMockData();
     });
+
     setInterval(updateGreeting, 60000);
   });
 
@@ -55,12 +165,12 @@ if (isDashboardPage) {
       const token = checkAuthentication();
       if (!token) return;
 
-      const response = await fetch(`${API_URL}/auth/dashboard`, {
+      const res = await fetch(`${AUTH_URL}/dashboard`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      if (!response.ok) throw new Error('Error al cargar dashboard');
-      const data = await response.json();
+      if (!res.ok) throw new Error('Error al cargar dashboard');
+      const data = await res.json();
       populateDashboard(data);
     } catch (e) {
       console.error(e);
@@ -161,47 +271,6 @@ if (isDashboardPage) {
   }
 
   function loadMockData() {
-    // Lógica simulada para pruebas sin conexión a API
+    console.log('Datos simulados no implementados aún');
   }
-}
-
-/* ========= FUNCIONES DE REGISTRO ========= */
-if (isRegisterPage) {
-  document.addEventListener('DOMContentLoaded', () => {
-    const registerForm = document.getElementById('registerForm');
-    if (!registerForm) return;
-
-    registerForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const username = document.getElementById('usuario').value;
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('contrasena').value;
-      const confirm = document.getElementById('confirmarContrasena').value;
-      const accepted = document.getElementById('termsAccepted').checked;
-
-      if (!accepted) return alert('Acepta los términos');
-
-      if (password !== confirm) return alert('Las contraseñas no coinciden');
-
-      try {
-        const res = await fetch(`${API_URL}/auth/register`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, email, password })
-        });
-
-        const data = await res.json();
-        if (res.ok) {
-          alert('Usuario registrado correctamente');
-          window.location.href = 'index.html';
-        } else {
-          alert(data.msg || 'Error en el registro');
-        }
-      } catch (err) {
-        console.error(err);
-        alert('Error de red');
-      }
-    });
-  });
 }

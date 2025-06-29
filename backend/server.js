@@ -7,12 +7,13 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 
 const app = express();
+const PORT = process.env.PORT || 4000;
 
-// Middlewares globales
+// Middleware global
 app.use(cors());
 app.use(express.json());
 
-// Logging simple de cada petición
+// Logger básico para cada petición
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
   next();
@@ -22,12 +23,12 @@ app.use((req, res, next) => {
 app.use('/api/auth', authRoutes);
 app.use(express.static('public'));
 
-// Ruta raíz opcional (redirige al dashboard o al formulario según necesidad)
+// Ruta raíz
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html'); // Puedes cambiar por /dashboard.html o /register.html
+  res.sendFile(__dirname + '/public/index.html'); // Cambia por dashboard.html si es necesario
 });
 
-// Manejo de errores
+// Manejo de errores internos
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(500).json({ error: 'Internal server error' });
@@ -38,17 +39,17 @@ app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Conexión a MongoDB y arranque del servidor
-const PORT = process.env.PORT || 4000;
-
+// Conexión a MongoDB y levantar servidor
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Conectado a MongoDB');
 
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-      console.log('📁 Proyecto: DASHBOARD & REGISTRO');
-      console.log('✅ Rutas disponibles: /api/auth/register, /api/auth/login, /api/auth/dashboard');
+      console.log('📁 Proyecto completo con LOGIN, REGISTRO y DASHBOARD');
+      console.log('🔒 /api/auth/login');
+      console.log('🆕 /api/auth/register');
+      console.log('📊 /api/auth/dashboard');
     });
   })
   .catch((error) => {
