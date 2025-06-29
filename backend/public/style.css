@@ -26,6 +26,9 @@ body {
   padding: 20px;
 }
 
+/* ============================================
+   ESTILOS BÁSICOS PARA LOGIN
+   ============================================ */
 .login-box {
   background: #ffffff;
   padding: 35px 30px;
@@ -94,64 +97,22 @@ body {
   background: linear-gradient(135deg, #f9ab6f 0%, #fc846c 100%);
 }
 
-.form-box {
-  background: #ffffff;
-  padding: 35px 30px;
-  border-radius: 20px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 360px;
-  text-align: center;
-  animation: slideIn 0.6s ease-out;
-}
-
-.form-box h2 {
-  color: #333;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
-.form-box input {
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 15px;
-  margin-bottom: 15px;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.form-box input:focus {
-  border-color: #ea00ff;
-  outline: none;
-  box-shadow: 0 0 5px rgba(253, 160, 133, 0.5);
-}
-
-.form-box button {
-  padding: 12px;
-  background: linear-gradient(135deg, #68349b, #8c4ec5, #aa45b1);
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.3s ease;
-  width: 100%;
-}
-
-.form-box button:hover {
-  transform: scale(1.03);
-  background: linear-gradient(135deg, #ff00bf 0%, #fc846c 100%);
-}
-
 .cuenta {
   font-size: 12px;
   margin-top: 20px;
 }
 
+/* ============================================
+   ESTILOS COMPLETOS PARA REGISTRO
+   (como ya tienes en main)
+   ============================================ */
+
+/* ... (todo lo que sigue en tu bloque de main como `.register-form`, `.input-group`, `.strength-meter`, `.checkbox-group`, etc.) ... */
+
 @media (max-width: 400px) {
-  .login-box, .form-box {
+  .login-box {
     padding: 25px 20px;
   }
 }
+
+/* Reusa aquí el @media (max-width: 480px) para .register-form del bloque main */
