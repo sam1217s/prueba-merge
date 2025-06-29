@@ -23,12 +23,12 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Please enter a valid email'],
     default: null,
-    sparse: true
+    sparse: true // Permite múltiples documentos con email null
   },
   createdAt: {
     type: Date,
     default: Date.now,
-    immutable: true
+    immutable: true // No se puede modificar después de crear
   },
   lastLogin: {
     type: Date,
@@ -48,23 +48,27 @@ const userSchema = new mongoose.Schema({
   }
 });
 
-// Índices
+// Índices para mejorar rendimiento
 userSchema.index({ username: 1 });
 userSchema.index({ email: 1 });
 userSchema.index({ createdAt: 1 });
 
-// Middleware pre-save
+// Middleware pre-save para validaciones adicionales
 userSchema.pre('save', function(next) {
+  // Convertir username a minúsculas
   if (this.username) {
     this.username = this.username.toLowerCase().trim();
   }
+  
+  // Convertir email a minúsculas si existe
   if (this.email) {
     this.email = this.email.toLowerCase().trim();
   }
+  
   next();
 });
 
-// Método de perfil público
+// Método para obtener información pública del usuario
 userSchema.methods.getPublicProfile = function() {
   return {
     id: this._id,
@@ -76,7 +80,7 @@ userSchema.methods.getPublicProfile = function() {
   };
 };
 
-// Método estático para login por username o email
+// Método estático para buscar por username o email
 userSchema.statics.findByUsernameOrEmail = function(identifier) {
   return this.findOne({
     $or: [

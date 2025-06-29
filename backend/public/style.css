@@ -1,3 +1,4 @@
+/* Reset */
 * {
   margin: 0;
   padding: 0;
@@ -26,10 +27,9 @@ body {
   padding: 20px;
 }
 
-/* ============================================
-   ESTILOS MEJORADOS PARA LOGIN - DESARROLLADOR 1
-   ============================================ */
-
+/* ============================
+   LOGIN BOX - Visual mejorado
+   ============================ */
 .login-box {
   background: #ffffff;
   padding: 40px 35px;
@@ -188,10 +188,9 @@ body {
   text-decoration: underline;
 }
 
-/* ============================================
-   ESTILOS BÁSICOS PARA REGISTRO (Sin tocar mucho)
-   ============================================ */
-
+/* =============================
+   FORM BOX (usado para registro)
+   ============================= */
 .form-box {
   background: #ffffff;
   padding: 35px 30px;
@@ -231,7 +230,7 @@ body {
 }
 
 .form-box input:focus {
-  border-color: #ea00ff;
+  border-color: #6D3C52;
   outline: none;
   box-shadow: 0 0 5px rgba(253, 160, 133, 0.5);
 }
@@ -259,9 +258,12 @@ body {
   margin-top: 20px;
 }
 
-/* Responsive */
+/* =============================
+   RESPONSIVE
+   ============================= */
 @media (max-width: 400px) {
-  .login-box, .form-box {
+  .login-box,
+  .form-box {
     padding: 25px 20px;
   }
 }

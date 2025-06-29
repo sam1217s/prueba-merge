@@ -7,59 +7,61 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 
 const app = express();
-const PORT = process.env.PORT || 4000;
 
-// Middleware global
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-// Logger básico para cada petición
+// Middleware para logging de requests
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
   next();
 });
 
-// Rutas principales
+// Rutas
 app.use('/api/auth', authRoutes);
 app.use(express.static('public'));
 
-// Ruta raíz
+// Ruta por defecto - redirigir a register
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/public/index.html'); // Cambia por dashboard.html si es necesario
+  res.sendFile(__dirname + '/public/register.html');
 });
 
-// Manejo de errores internos
+// Middleware de manejo de errores
 app.use((err, req, res, next) => {
   console.error('Error:', err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// Ruta no encontrada
+// Manejar rutas no encontradas
 app.use('*', (req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Conexión a MongoDB y levantar servidor
+// Conectar a MongoDB y iniciar servidor
+const PORT = process.env.PORT || 4000;
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
     console.log('✅ Conectado a MongoDB');
-
+    console.log('📊 Base de datos:', mongoose.connection.name);
+    
     app.listen(PORT, () => {
       console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`);
-      console.log('📁 Proyecto completo con LOGIN, REGISTRO y DASHBOARD');
-      console.log('🔒 /api/auth/login');
-      console.log('🆕 /api/auth/register');
-      console.log('📊 /api/auth/dashboard');
+      console.log('📁 Proyecto del Desarrollador 2 - REGISTRO');
+      console.log('✅ Funcionalidad implementada: REGISTRO');
+      console.log('❌ Funcionalidad pendiente: LOGIN (Desarrollador 1)');
+      console.log('🎯 Ruta principal: /register.html');
     });
   })
   .catch((error) => {
-    console.error('❌ Error al conectar a la base de datos:', error);
+    console.error('❌ Error de conexión a la base de datos:', error);
     process.exit(1);
   });
 
-// Cierre controlado del servidor
+// Manejar cierre graceful
 process.on('SIGINT', async () => {
-  console.log('\n🛑 Cerrando servidor...');
+  console.log('\\n🛑 Cerrando servidor...');
   await mongoose.connection.close();
   console.log('✅ Conexión a MongoDB cerrada');
   process.exit(0);

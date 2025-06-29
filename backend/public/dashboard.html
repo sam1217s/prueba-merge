@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Panel de Control</title>
+  <link rel="stylesheet" href="dashboard.css" />
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="user-profile">
+          <img src="" alt="User Avatar" id="userAvatar" class="avatar">
+          <div class="user-info">
+            <h3 id="userName">Cargando...</h3>
+            <span class="user-status online">En línea</span>
+          </div>
+        </div>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <ul class="nav-list">
+          <li class="nav-item active">
+            <a href="#" class="nav-link">
+              <i class="fas fa-chart-line"></i>
+              <span>Dashboard</span>
+              <div class="active-indicator"></div>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fas fa-project-diagram"></i>
+              <span>Proyectos</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fas fa-file-invoice"></i>
+              <span>Facturas</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="fas fa-chart-bar"></i>
+              <span>Reportes</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="help-section">
+          <p>¿Problemas?</p>
+          <a href="#" class="contact-link">Contáctanos</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Header -->
+      <header class="main-header">
+        <div class="header-left">
+          <h1 class="greeting">
+            <span class="greeting-text">Buenos días</span>, 
+            <span class="user-name" id="headerUserName">Usuario</span>
+          </h1>
+        </div>
+        <div class="header-right">
+          <div class="search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" placeholder="Buscar proyectos..." class="search-input">
+          </div>
+          <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </header>
+
+      <!-- Dashboard Content -->
+      <div class="dashboard-content">
+        <!-- Stats Cards -->
+        <section class="stats-section">
+          <div class="stats-grid">
+            <!-- Earnings Card -->
+            <div class="stat-card earnings-card">
+              <div class="card-content">
+                <div class="card-header">
+                  <h3>Ganancias</h3>
+                  <div class="earnings-chart">
+                    <i class="fas fa-chart-line"></i>
+                  </div>
+                </div>
+                <div class="card-value">
+                  <span class="currency">€</span>
+                  <span class="amount" id="earningsAmount">0</span>
+                </div>
+                <div class="card-change positive" id="earningsChange">
+                  +10% desde el mes pasado
+                </div>
+              </div>
+            </div>
+
+            <!-- Rank Card -->
+            <div class="stat-card rank-card">
+              <div class="card-content">
+                <div class="rank-icon">
+                  <i class="fas fa-trophy"></i>
+                </div>
+                <div class="rank-number" id="rankNumber">98</div>
+                <div class="rank-description" id="rankDescription">en top 100</div>
+              </div>
+            </div>
+
+            <!-- Projects Card -->
+            <div class="stat-card projects-card">
+              <div class="card-content">
+                <div class="projects-number" id="projectsNumber">32</div>
+                <div class="projects-label">Proyectos</div>
+                <div class="projects-status">
+                  <span class="status-item">
+                    <span class="status-dot mobile"></span>
+                    <span id="projectsPending">mobile app</span>
+                  </span>
+                  <span class="status-item">
+                    <span class="status-dot branding"></span>
+                    <span id="projectsCompleted">branding</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Content Grid -->
+        <section class="content-grid">
+          <!-- Recent Invoices -->
+          <div class="content-card invoices-card">
+            <div class="card-header">
+              <h3>Facturas Recientes</h3>
+            </div>
+            <div class="invoices-list" id="invoicesList">
+              <!-- Dynamic content -->
+            </div>
+          </div>
+
+          <!-- Your Projects -->
+          <div class="content-card projects-list-card">
+            <div class="card-header">
+              <h3>Tus Proyectos</h3>
+              <a href="#" class="see-all-link">Ver todos los proyectos</a>
+            </div>
+            <div class="projects-list" id="projectsList">
+              <!-- Dynamic content -->
+            </div>
+          </div>
+
+          <!-- Recommended Project -->
+          <div class="content-card recommended-project-card">
+            <div class="card-header">
+              <h3>Proyecto Recomendado</h3>
+            </div>
+            <div class="recommended-project" id="recommendedProject">
+              <!-- Dynamic content -->
+            </div>
+          </div>
+        </section>
+
+        <!-- Engagement Banner -->
+        <section class="engagement-banner">
+          <div class="banner-content">
+            <div class="banner-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="banner-text">
+              <h4>Conecta con clientes</h4>
+              <p>Únete al canal de Slack</p>
+            </div>
+            <button class="banner-btn">
+              Únete ahora
+            </button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner">
+      <i class="fas fa-spinner fa-spin"></i>
+      <p>Cargando dashboard...</p>
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

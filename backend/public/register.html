@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crear Cuenta - Sistema de Autenticación</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <form id="registerForm" class="form-box register-form">
+      <div class="icon">🎉</div>
+      <h2>Crear Nueva Cuenta</h2>
+      <p class="subtitle">Únete a nuestra plataforma</p>
+      
+      <div class="input-group">
+        <input 
+          type="text" 
+          placeholder="Nombre de usuario" 
+          id="usuario" 
+          name="username" 
+          required 
+          autocomplete="username"
+          minlength="3"
+          maxlength="20"
+        />
+        <small class="input-help">Mínimo 3 caracteres, solo letras, números y guiones bajos</small>
+        <div id="usernameStatus" class="field-status" style="display: none;"></div>
+      </div>
+      
+      <div class="input-group">
+        <input 
+          type="email" 
+          placeholder="Correo electrónico (opcional)" 
+          id="email" 
+          name="email" 
+          autocomplete="email"
+        />
+        <small class="input-help">Opcional - Para recuperación de cuenta</small>
+        <div id="emailStatus" class="field-status" style="display: none;"></div>
+      </div>
+      
+      <div class="input-group">
+        <input 
+          type="password" 
+          placeholder="Contraseña" 
+          id="contrasena" 
+          name="password" 
+          required 
+          autocomplete="new-password"
+          minlength="6"
+          maxlength="50"
+        />
+        <small class="input-help">Mínimo 6 caracteres, incluye letras y números</small>
+        <div id="passwordStatus" class="field-status" style="display: none;"></div>
+      </div>
+      
+      <div class="input-group">
+        <input 
+          type="password" 
+          placeholder="Confirmar contraseña" 
+          id="confirmarContrasena" 
+          name="confirmPassword" 
+          required 
+          autocomplete="new-password"
+        />
+        <div id="confirmPasswordStatus" class="field-status" style="display: none;"></div>
+      </div>
+      
+      <div class="password-strength">
+        <div class="strength-meter">
+          <div class="strength-bar" id="strengthBar"></div>
+        </div>
+        <span class="strength-text" id="strengthText">Fortaleza de contraseña</span>
+      </div>
+      
+      <div class="checkbox-group">
+        <label>
+          <input type="checkbox" id="termsAccepted" required> 
+          Acepto los <a href="#" target="_blank">términos y condiciones</a>
+        </label>
+      </div>
+      
+      <div class="checkbox-group">
+        <label>
+          <input type="checkbox" id="newsletter"> 
+          Quiero recibir actualizaciones por correo
+        </label>
+      </div>
+      
+      <button type="submit" id="registerButton" class="register-btn">
+        Crear Cuenta
+      </button>
+      
+      <div class="links">
+        <a href="index.html" class="login-link">
+          ¿Ya tienes cuenta? Inicia sesión aquí
+        </a>
+      </div>
+    </form>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
